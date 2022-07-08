@@ -1,3 +1,4 @@
+require("dotenv").config();
 const fastify = require("fastify")({ logger: true });
 
 fastify.register(require("@fastify/jwt"), {
@@ -6,11 +7,11 @@ fastify.register(require("@fastify/jwt"), {
 
 fastify.register(require("@fastify/postgres"), {
   // connectionString: process.env.DB_CONNECTION_STRING,
-  connectionString:
-    "postgres://travel_app_user:QIhjIxKWdyQXQRGpobD2nzliFAvgcbp3@dpg-catmmg10gd0dl92l858g-a.ohio-postgres.render.com/travel_app?ssl=true",
+  connectionString: process.env.DB_CONNECTION_STRING,
 });
 
 fastify.register(require("./routes/event"));
+fastify.register(require("./routes/poll"));
 fastify.register(require("./routes/trip"));
 fastify.register(require("./routes/user"));
 
@@ -20,7 +21,7 @@ fastify.get("/", async (request, reply) => {
 
 const start = async () => {
   try {
-    await fastify.listen({ port: 3000 });
+    await fastify.listen({ port: 3000, host: "0.0.0.0" });
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);
